@@ -11,13 +11,13 @@
 
 ## 2. Why do we need SRP?
 
-| Problem without SRP | Benefit with SRP |
-|---|---|
-| A change in one feature breaks another | Changes stay isolated |
-| Huge "God classes" that are hard to read | Small, readable classes |
-| Hard to unit test because everything is coupled | Each class is easy to test alone |
-| Merge conflicts when many devs edit the same file | Teams work on separate classes |
-| Poor reuse | Pieces can be reused, e.g. `Printer` for any invoice |
+| Problem without SRP                               | Benefit with SRP                                     |
+|---------------------------------------------------|------------------------------------------------------|
+| A change in one feature breaks another            | Changes stay isolated                                |
+| Huge "God classes" that are hard to read          | Small, readable classes                              |
+| Hard to unit test because everything is coupled   | Each class is easy to test alone                     |
+| Merge conflicts when many devs edit the same file | Teams work on separate classes                       |
+| Poor reuse                                        | Pieces can be reused, e.g. `Printer` for any invoice |
 
 **Key idea:** If a class has many responsibilities, a change made for one of them can break the others.
 
@@ -33,7 +33,7 @@
 1. List everything the class does.
 2. Group the work by **reason to change**.
 3. Move each group into its **own class**.
-4. Use **composition** so a higher-level class uses these small classes.
+4. Use **composition** so a higher-level class uses these small classes.(IMPORTANT POINT)
 
 ---
 
@@ -89,22 +89,26 @@ public:
 ### ✅ Following SRP
 
 ```
-+---------------------------+
-|       ShoppingCart        |   (only manages items + total)
-+---------------------------+
-| - products: vector<Product*>
-| + addProduct()            |
-| + getProducts()           |
-| + calculateTotal()        |
-+---------------------------+
-        ^              ^
-        | has-a        | has-a
-+-------------------+  +-------------------+
-| CartInvoicePrinter|  |  CartDBStorage    |
-+-------------------+  +-------------------+
-| - cart: ShoppingCart*| - cart: ShoppingCart*
-| + printInvoice()  |  | + saveToDB()      |
-+-------------------+  +-------------------+
+             +---------------------------------+
+             |           ShoppingCart          |
+             +---------------------------------+
+             | - products : vector<Product*>   |
+             +---------------------------------+
+             | + addProduct(Product*)          |
+             | + getProducts()                 |
+             | + calculateTotal() : double     |
+             +---------------------------------+
+                              ^
+                              | has-a
+              +---------------+----------------+
+              |                                |
++--------------------------+     +--------------------------+
+|    CartInvoicePrinter    |     |      CartDBStorage       |
++--------------------------+     +--------------------------+
+| - cart : ShoppingCart*   |     | - cart : ShoppingCart*   |
++--------------------------+     +--------------------------+
+| + printInvoice()         |     | + saveToDB()             |
++--------------------------+     +--------------------------+
 ```
 
 ```cpp
@@ -160,24 +164,37 @@ Now if the DB changes from MySQL to MongoDB, you **only touch `CartDBStorage`**.
 
 ### ❌ Bad
 ```
-+-----------------------+
-|       Employee        |
-+-----------------------+
-| + calculatePay()      |  -> Accounts team
-| + generateReport()    |  -> HR team
-| + saveEmployee()      |  -> DBA / Tech team
-+-----------------------+
++------------------------+
+|        Employee        |
++------------------------+
+| - id : int             |
+| - name : string        |
+| - salary : double      |
++------------------------+
+| + calculatePay()       |  <- Accounts team
+| + generateReport()     |  <- HR team
+| + saveEmployee()       |  <- DBA / Tech team
++------------------------+
 ```
 
 ### ✅ Good
 ```
-+--------------+     +-----------------+
-|   Employee   |<----| PayCalculator   |  + calculatePay(Employee&)
-|  (data only) |     +-----------------+
-| - id, name,  |<----| ReportGenerator |  + generate(Employee&)
-|   salary     |     +-----------------+
-+--------------+<----| EmployeeRepo    |  + save(Employee&)
-                     +-----------------+
+                                 +----------------------+
+                                 |       Employee       |
+                                 +----------------------+
+                                 | - id : int           |
+                                 | - name : string      |
+                                 | - salary : double    |
+                                 +----------------------+
+                                             ^
+                                             | uses
+              +------------------------------+------------------------------+
+              |                              |                              |
++---------------------------+  +---------------------------+  +---------------------------+
+|       PayCalculator       |  |      ReportGenerator      |  |        EmployeeRepo       |
++---------------------------+  +---------------------------+  +---------------------------+
+| + calculatePay(Employee&) |  | + generate(Employee&)     |  | + save(Employee&)         |
++---------------------------+  +---------------------------+  +---------------------------+
 ```
 
 ```cpp
@@ -206,12 +223,33 @@ public:
 
 ## 7. Example 3: User Registration (quick one)
 
+### ❌ Bad
 ```
-❌ UserService: register() + validateEmail() + sendWelcomeEmail() + logToFile()
++------------------------+
+|      UserService       |
++------------------------+
+| + registerUser()       |
+| + validateEmail()      |
+| + sendWelcomeEmail()   |
+| + logToFile()          |
++------------------------+
+```
 
-✅ UserService ──uses──> EmailValidator   (validate)
-               ──uses──> EmailSender      (send mail)
-               ──uses──> Logger           (log)
+### ✅ Good
+```
+                    +----------------------+
+                    |     UserService      |
+                    +----------------------+
+                    | + registerUser()     |
+                    +----------------------+
+                                | uses
+          +---------------------+---------------------+
+          v                     v                     v
++------------------+  +------------------+  +------------------+
+|  EmailValidator  |  |   EmailSender    |  |      Logger      |
++------------------+  +------------------+  +------------------+
+| + validate()     |  | + send()         |  | + log()          |
++------------------+  +------------------+  +------------------+
 ```
 
 ---
@@ -238,7 +276,18 @@ In a restaurant, the **chef** cooks, the **waiter** serves and the **cashier** b
 
 ---
 
-## 9. One-line revision
+## 9. Why "has-a" (composition) in SRP?
+- SRP **splits** a class, but the split classes still need each other's data. For example, the CartInvoicePrinter needs the cart's items, to print products and their prices on the invoice.
+- **Has-a** lets them collaborate: `CartInvoicePrinter` holds a `ShoppingCart*` and just **asks** it for data.
+- **Not is-a (inheritance):** "printer is-a cart" is false. The printer would also inherit `addProduct()`, which puts multiple jobs back into one class.
+- Result: **loose coupling**. You can swap the printer or test it with a fake cart without touching `ShoppingCart`.
+- Interview note: the printer doesn't own the cart, so technically this is **aggregation** (weak has-a). Courses often loosely call it composition.
+
+> **SRP splits responsibilities; has-a lets the pieces work together without merging them back.**
+
+---
+
+## 10. One-line revision
 > **"Gather together things that change for the same reason; separate things that change for different reasons."**
 
 Related code in this folder: `SRP_violated.cpp`, `SRP_followed.cpp`.
