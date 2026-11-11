@@ -11,12 +11,19 @@
 
 ## 2. Why do we need LSP?
 
+```
+----------------------------------------------------------------------------------------
 | Problem without LSP                        | Benefit with LSP                        |
-|--------------------------------------------|-----------------------------------------|
+----------------------------------------------------------------------------------------
 | Child crashes / throws where parent worked | Any child can replace the parent safely |
+----------------------------------------------------------------------------------------
 | Client needs typeid / dynamic_cast checks  | Client code stays simple and generic    |
+----------------------------------------------------------------------------------------
 | Adding a new child breaks old client code  | New children plug in (helps OCP)        |
+----------------------------------------------------------------------------------------
 | Surprising behaviour, hidden bugs          | Predictable, trustworthy hierarchy      |
+----------------------------------------------------------------------------------------
+```
 
 **Key idea:** Polymorphism only works if every child is a **true** substitute. One "bad child" forces `if (type == ...)` checks everywhere, which also breaks OCP.
 

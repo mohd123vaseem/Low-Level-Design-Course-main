@@ -11,13 +11,21 @@
 
 ## 2. Why do we need SRP?
 
-| Problem without SRP                               | Benefit with SRP                                     |
-|---------------------------------------------------|------------------------------------------------------|
-| A change in one feature breaks another            | Changes stay isolated                                |
-| Huge "God classes" that are hard to read          | Small, readable classes                              |
-| Hard to unit test because everything is coupled   | Each class is easy to test alone                     |
-| Merge conflicts when many devs edit the same file | Teams work on separate classes                       |
-| Poor reuse                                        | Pieces can be reused, e.g. `Printer` for any invoice |
+```
+----------------------------------------------------------------------------------------------------------
+| Problem without SRP                               | Benefit with SRP                                   |
+----------------------------------------------------------------------------------------------------------
+| A change in one feature breaks another            | Changes stay isolated                              |
+----------------------------------------------------------------------------------------------------------
+| Huge "God classes" that are hard to read          | Small, readable classes                            |
+----------------------------------------------------------------------------------------------------------
+| Hard to unit test because everything is coupled   | Each class is easy to test alone                   |
+----------------------------------------------------------------------------------------------------------
+| Merge conflicts when many devs edit the same file | Teams work on separate classes                     |
+----------------------------------------------------------------------------------------------------------
+| Poor reuse                                        | Pieces can be reused, e.g. Printer for any invoice |
+----------------------------------------------------------------------------------------------------------
+```
 
 **Key idea:** If a class has many responsibilities, a change made for one of them can break the others.
 

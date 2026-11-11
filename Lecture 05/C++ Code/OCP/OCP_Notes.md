@@ -48,13 +48,21 @@ Analogy: a **power strip**. You plug in a new device without rewiring the strip.
 
 ## 2. Why do we need OCP?
 
+```
+---------------------------------------------------------------------------------------------
 | Problem without OCP                         | Benefit with OCP                            |
-|---------------------------------------------|---------------------------------------------|
+---------------------------------------------------------------------------------------------
 | Every new feature edits old, tested code    | New feature = new class, old code untouched |
+---------------------------------------------------------------------------------------------
 | Risk of breaking features that already work | Existing behaviour stays safe               |
+---------------------------------------------------------------------------------------------
 | Need to retest the whole class every time   | Only test the new class                     |
+---------------------------------------------------------------------------------------------
 | Long if-else / switch chains keep growing   | Polymorphism replaces if-else               |
+---------------------------------------------------------------------------------------------
 | Tight coupling to concrete types            | Code depends on an abstraction              |
+---------------------------------------------------------------------------------------------
+```
 
 **Key idea:** Every edit to old code is a chance to break something that already works. With OCP, new features are **new classes**, not edits.
 
