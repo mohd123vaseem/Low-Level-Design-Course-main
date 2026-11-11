@@ -35,7 +35,7 @@ If a child silently breaks a guarantee, the client gets **wrong data or a crash*
 
 ---
 
-## 3. Rule 1: Class Invariant
+## 3. Rule 1: Class Invariant Definition.
 > **The invariant of the parent must stay true in the child. The child can maintain or strengthen it, never weaken it.**
 
 **Invariant:** a rule about the object's data that must hold **before and after every public method call**.

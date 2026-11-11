@@ -40,9 +40,10 @@ def _at(total, cols, chars):
     return "".join(row).rstrip()
 
 
-def tree(top, children, label, gap="  "):
+def tree(top, children, label, gap="  ", down=False):
     """Parent box centered above its children, joined by a '^ | label' arrow.
     children = list of leaf(box) or another tree() result (for multi-level hierarchies).
+    down=True points the arrows from the top box DOWN to the children (use for has-a / uses).
     Returns (lines, center_column)."""
     ws = [max(len(l) for l in c[0]) for c in children]
     h = max(len(c[0]) for c in children)
@@ -62,7 +63,8 @@ def tree(top, children, label, gap="  "):
         off = 0
     total = x + 200
     out = [" "*off + l for l in top]
-    out.append(_at(total, [mid], ["^"]))
+    if not down:
+        out.append(_at(total, [mid], ["^"]))
     out.append(_at(total, [mid], ["| " + label]))
     if len(children) > 1:
         line = [" "]*total
@@ -71,8 +73,20 @@ def tree(top, children, label, gap="  "):
         for c in centers + [mid]:
             line[c] = "+"
         out.append("".join(line).rstrip())
-        out.append(_at(total, centers, ["|"]*len(centers)))
+        out.append(_at(total, centers, ["v" if down else "|"]*len(centers)))
+    elif down:
+        out.append(_at(total, [mid], ["v"]))
     return out + kids, mid
+
+
+def above(top, below, col, label):
+    """Put `top` centered on column `col` above an existing diagram, with a down arrow (has-a / uses)."""
+    off = col - len(top[0]) // 2
+    shift = max(0, -off)
+    out = [" " * (off + shift) + l for l in top]
+    out.append(_at(col + shift + 80, [col + shift], ["| " + label]))
+    out.append(_at(col + shift + 80, [col + shift], ["v"]))
+    return out + [" " * shift + l if l else l for l in below]
 
 
 def beside(a, b, gap="        "):
@@ -81,6 +95,30 @@ def beside(a, b, gap="        "):
     h = max(len(a), len(b))
     return [((a[i] if i < len(a) else "").ljust(wa) + gap + (b[i] if i < len(b) else "")).rstrip()
             for i in range(h)]
+
+
+def multi(parents, child, label, gap="    "):
+    """Multiple inheritance: several parent boxes side by side, one child box below pointing up to all of them."""
+    ws = [len(p[0]) for p in parents]
+    centers, x = [], 0
+    for w in ws:
+        centers.append(x + w // 2)
+        x += w + len(gap)
+    h = max(len(p) for p in parents)
+    out = [gap.join((p[i] if i < len(p) else "").ljust(w) for p, w in zip(parents, ws)).rstrip() for i in range(h)]
+    total = x + 200
+    mid = (centers[0] + centers[-1]) // 2
+    out.append(_at(total, centers, ["^"] * len(centers)))
+    out.append(_at(total, centers, ["|"] * len(centers)))
+    line = [" "] * total
+    for c in range(centers[0], centers[-1] + 1):
+        line[c] = "-"
+    for c in centers + [mid]:
+        line[c] = "+"
+    out.append("".join(line).rstrip())
+    out.append(_at(total, [mid], ["| " + label]))
+    off = mid - len(child[0]) // 2
+    return out + [" " * off + l for l in child]
 
 
 def D(lines):
