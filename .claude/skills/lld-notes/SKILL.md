@@ -16,7 +16,7 @@ For **every topic** (a principle, or each rule inside a principle) write, in thi
 2. **What problem it solves / why we study it**: the pain without it, and what goes wrong for the client code. For a principle, add a boxed "Problem without X / Benefit with X" table. End with a bold **Key idea:** line.
 3. **Examples** (if any):
    - Example 1 from the lecture code, then 1-2 classic/interview examples if they help (Payment, Shapes, Birds, Rectangle/Square...).
-   - Each example: `### ❌ Bad` and `### ✅ Good`, each with an ASCII class diagram, then a short C++ snippet, then 1-2 lines on why.
+   - Each example: `### ❌ Bad` and `### ✅ Good`, each with an ASCII class diagram, then 1-2 lines on why. **No code blocks** (see Formatting).
    - A simple real-life analogy if it makes the idea clearer (cricket, shop, car...).
 4. **How to spot a violation** (for principles/rules): a bullet list of smells.
 5. **How to apply it** (for principles/rules): numbered steps.
@@ -65,7 +65,7 @@ The same order applies when explaining in chat: definition, then problem/why, th
 ## Style
 - Crisp and to the point; simple words. The user prefers very simple explanations with analogies when a concept is confusing.
 - Use `---` between topics.
-- When the user asks to add something "briefly, as a concept", write a short `###` subsection (bullets plus a small snippet or diagram) inside the related topic, not as a Q&A.
+- When the user asks to add something "briefly, as a concept", write a short `###` subsection (bullets plus a small diagram) inside the related topic, not as a Q&A.
 
 ## Formatting
 - **Tables are closed boxes made only of `-` and `|` (never `+`)**, inside a plain ``` fence:
@@ -84,7 +84,23 @@ The same order applies when explaining in chat: definition, then problem/why, th
   - Mark abstract classes `<<abstract>> Name` and pure virtuals `= 0`.
   - Put the parent above its children. Label arrows `is-a` (inheritance) or `has-a` (composition).
   - Generate diagrams with `box()`, `leaf()`, `tree()`, `beside()` from `tools/notes_tools.py`. Don't hand-draw them.
-- C++ snippets: short, `using namespace std` style like the lecture code, `override` on overrides, `// ❌` / `// ✅` / `// 💥` on key lines.
+  - **Grow diagrams sideways, not downwards.** `is-a` trees stay top-down (parent above children), but
+    `has-a` / `creates` / `uses` links go LEFT -> RIGHT: `side(client, tree, "has-a")` puts the box to the left
+    with a `----->` arrow; `fan(box, [trees], "has-a")` fans one box out to several children.
+    Don't stack Client above Factory above Product with `above()`.
+  - **Show every relation.** If a class holds, creates or uses another, draw that arrow. No floating boxes.
+    - `has-a`: SOLID `----->`. Only when the class keeps the other as a MEMBER (pointer/object field).
+    - `creates` / `uses`: DASHED `- - ->` (`dash=True` in `side()`, `fan()`, `tree()`). A dependency: makes or uses it and keeps nothing.
+    - Draw creation from the CONCRETE creator to the CONCRETE product (`SinghBurger - - -> BasicBurger`),
+      never from an abstract factory to an abstract product. The abstract class creates nothing.
+    - **Always draw the `<<abstract>>` parent** of products above them (`tree()`); never shortcut with "is-a X" text in a box.
+    - Creational diagrams: `factory_view(client, factory, product_tree)` gives Client -uses-> <<abstract>> Product,
+      Client -has-a-> Factory, Factory - -creates- -> each concrete product. `feed(creator, product_tree)` without a client.
+      Several creator/product pairs (RoadLogistics->Truck, SeaLogistics->Ship): `connect_below(beside(t1, t2), links)`.
+  - Keep a diagram within about 120 columns.
+- **No C++ code blocks in notes.** The code already lives in the lecture's `.cpp` files.
+  - For a lecture example, add one pointer line after the diagram, like: > Code: `File.cpp`: <what to look at>.
+  - For classic/extra examples, explain in words plus the diagram. Short inline `code` names are fine (`setRoute(new BikeRoute())`).
 
 ## Where notes go
 `Lecture XX/C++ Code/<Topic>/<Topic>_Notes.md`, next to the lecture's `.cpp` files.
