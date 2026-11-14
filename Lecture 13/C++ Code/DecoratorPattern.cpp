@@ -27,6 +27,11 @@ public:
         this->character = c;
     }
 
+    // Deleting a decorator also deletes the object it wraps,
+    // so "delete mario" frees the whole chain (Star -> Gun -> HeightUp -> Mario).
+    ~CharacterDecorator() {
+        delete character;
+    }
 };
 
 // Concrete Decorator: Height-Increasing Power-Up.
@@ -80,6 +85,7 @@ int main() {
     // Finally, add a StarPowerUp decoration.
     mario = new StarPowerUp(mario);
     cout << "After StarPowerUp: " << mario->getAbilities() << endl;
+    cout<<endl;
 
     delete mario;
 

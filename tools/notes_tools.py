@@ -102,7 +102,7 @@ def _bus(row, joints, dash):
             row[j] = "+"
 
 
-def side(a, b, label, ra=1, rb=1, minlen=6, dash=False):
+def side(a, b, label, ra=1, rb=1, minlen=6, dash=False, gap=3):
     """Put diagram b to the RIGHT of diagram a, joined by a horizontal '----->' arrow (label above it)
     from the box edge on a's row `ra` to the box on b's row `rb` (row 1 = a box's title row).
     Prefer this over above() so diagrams grow sideways instead of downwards."""
@@ -114,7 +114,7 @@ def side(a, b, label, ra=1, rb=1, minlen=6, dash=False):
     X = start + max(minlen, len(label) + 4) + 1 - lead                # column where b begins
     for i in range(min(len(A), len(B))):                              # no row may collide (2-space gap)
         if A[i].strip() and B[i].strip():
-            X = max(X, len(A[i].rstrip()) + 3 - (len(B[i]) - len(B[i].lstrip())))
+            X = max(X, len(A[i].rstrip()) + gap - (len(B[i]) - len(B[i].lstrip())))
     X = max(X, 0)
     h = max(len(A), len(B))
     out = []

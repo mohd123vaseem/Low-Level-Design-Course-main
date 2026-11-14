@@ -15,7 +15,8 @@ For **every topic** (a principle, or each rule inside a principle) write, in thi
 1. **Definition**: a clear, one-line quoted definition, then 1-3 bullets in plain words.
 2. **What problem it solves / why we study it**: the pain without it, and what goes wrong for the client code. For a principle, add a boxed "Problem without X / Benefit with X" table. End with a bold **Key idea:** line.
 3. **Examples** (if any):
-   - Example 1 from the lecture code, then 1-2 classic/interview examples if they help (Payment, Shapes, Birds, Rectangle/Square...).
+   - **Only examples from the lecture's own code** (same classes, same scenario), plus the lecture's UML image if there is one. No extra classic/interview examples unless the user asks. The ❌ Bad version uses the same lecture classes.
+   - Useful extras built from the lecture code: a UML -> lecture-class mapping table, a call-flow sketch, a `main()` step-by-step table.
    - Each example: `### ❌ Bad` and `### ✅ Good`, each with an ASCII class diagram, then 1-2 lines on why. **No code blocks** (see Formatting).
    - A simple real-life analogy if it makes the idea clearer (cricket, shop, car...).
 4. **How to spot a violation** (for principles/rules): a bullet list of smells.
@@ -100,7 +101,7 @@ The same order applies when explaining in chat: definition, then problem/why, th
   - Keep a diagram within about 120 columns.
 - **No C++ code blocks in notes.** The code already lives in the lecture's `.cpp` files.
   - For a lecture example, add one pointer line after the diagram, like: > Code: `File.cpp`: <what to look at>.
-  - For classic/extra examples, explain in words plus the diagram. Short inline `code` names are fine (`setRoute(new BikeRoute())`).
+  - Short inline `code` names are fine (`notifySubscribers()`).
 
 ## Where notes go
 `Lecture XX/C++ Code/<Topic>/<Topic>_Notes.md`, next to the lecture's `.cpp` files.
