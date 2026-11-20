@@ -210,6 +210,27 @@ delete mario (Star)
 4. Make one **concrete decorator per feature**: call the wrapped object, then add its own part (`HeightUp`, `GunPowerUp`, `StarPowerUp`).
 5. Build at runtime: `obj = new Decorator(obj);` for each feature.
 
+### Where it is used (real world)
+Wherever optional features are stacked on one object at runtime:
+
+```
+--------------------------------------------------------------------------------------------------
+| Where                     | Base object               | Layers added (decorators)              |
+--------------------------------------------------------------------------------------------------
+| Java I/O streams          | FileInputStream           | Buffered, GZIP stream wrappers         |
+--------------------------------------------------------------------------------------------------
+| Coffee / pizza ordering   | Coffee, base pizza        | Milk, cheese, toppings (price + text)  |
+--------------------------------------------------------------------------------------------------
+| Services in a backend     | Real service / API client | Logging, caching, retry, auth wrappers |
+--------------------------------------------------------------------------------------------------
+| GUI windows (GoF classic) | Text view                 | Scrollbar, border                      |
+--------------------------------------------------------------------------------------------------
+| Games (lecture)           | Mario                     | HeightUp, Gun, Star power-ups          |
+--------------------------------------------------------------------------------------------------
+| Python @decorator         | A function                | Timing, caching, auth wrappers         |
+--------------------------------------------------------------------------------------------------
+```
+
 ---
 
 ## 2. Links to other principles

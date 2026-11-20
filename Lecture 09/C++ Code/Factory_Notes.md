@@ -164,6 +164,25 @@ The client just calls `NotificationFactory::create("sms")` and then `send()`. It
 3. Create a **factory class** with `Burger* createBurger(type)` containing the if-else.
 4. Replace every `new ConcreteBurger()` in clients with `factory->createBurger(type)`.
 
+### Where it is used (real world)
+Wherever ONE place picks a class from an input (string, enum, config) and hides the `new`:
+
+```
+-----------------------------------------------------------------------------------------------
+| Where                      | Input                    | Objects created                     |
+-----------------------------------------------------------------------------------------------
+| Notification service       | "email" / "sms" / "push" | EmailNotif, SMSNotif, PushNotif     |
+-----------------------------------------------------------------------------------------------
+| Logging setup from config  | "file" / "console"       | FileLogger, ConsoleLogger           |
+-----------------------------------------------------------------------------------------------
+| Database layer from config | "mysql" / "postgres"     | MySQLConnection, PostgresConnection |
+-----------------------------------------------------------------------------------------------
+| File viewer / parser       | file extension           | PdfParser, DocxParser, TxtParser    |
+-----------------------------------------------------------------------------------------------
+| Drawing apps (shape tool)  | selected tool            | Circle, Rectangle, Line             |
+-----------------------------------------------------------------------------------------------
+```
+
 ---
 
 ## 3. Factory Method
@@ -330,6 +349,25 @@ A 3rd shop? Add `class FarziBurger : public BurgerFactory`. **No existing class 
 2. Create **one concrete factory per variant** (`SinghBurger`, `KingBurger`).
 3. Each one overrides the factory method and creates **its own** products.
 4. The client holds `BurgerFactory*` and receives the concrete factory from outside (`main()`).
+
+### Where it is used (real world)
+Wherever a base class runs the common steps and each SUBCLASS decides which object to create:
+
+```
+-----------------------------------------------------------------------------------------------------------
+| Where                           | Creator (subclasses)                      | Product each one creates  |
+-----------------------------------------------------------------------------------------------------------
+| Delivery / logistics apps       | RoadLogistics, SeaLogistics               | Truck, Ship               |
+-----------------------------------------------------------------------------------------------------------
+| Cross-platform UI dialogs       | WindowsDialog, MacDialog (createButton()) | WindowsButton, MacButton  |
+-----------------------------------------------------------------------------------------------------------
+| Java collections                | ArrayList, HashSet (iterator())           | Each one's own iterator   |
+-----------------------------------------------------------------------------------------------------------
+| Game levels                     | IceLevel, FireLevel (createEnemy())       | IceEnemy, FireEnemy       |
+-----------------------------------------------------------------------------------------------------------
+| Restaurant franchises (lecture) | SinghBurger, KingBurger                   | Their own burger variants |
+-----------------------------------------------------------------------------------------------------------
+```
 
 ---
 
@@ -509,6 +547,25 @@ Pick `new MacFactory()` once (from the detected OS), and every button and checkb
 3. Make an **abstract factory** with one `create...() = 0` per product.
 4. Make **one concrete factory per family** that creates only that family's products.
 5. The client holds **one** `MealFactory*`, chosen once in `main()`.
+
+### Where it is used (real world)
+Wherever a whole FAMILY of related objects must match each other:
+
+```
+----------------------------------------------------------------------------------------------------------------------------
+| Where                                       | Factories                           | Family of products                   |
+----------------------------------------------------------------------------------------------------------------------------
+| Cross-platform UI (Qt, Swing look-and-feel) | WindowsFactory, MacFactory          | Button + Checkbox + Menu             |
+----------------------------------------------------------------------------------------------------------------------------
+| App themes                                  | DarkThemeFactory, LightThemeFactory | Button + TextBox + ScrollBar colours |
+----------------------------------------------------------------------------------------------------------------------------
+| DB drivers (ADO.NET DbProviderFactory)      | One per DB vendor                   | Connection + Command + Reader        |
+----------------------------------------------------------------------------------------------------------------------------
+| Game worlds                                 | IceWorldFactory, FireWorldFactory   | Enemy + Obstacle + Background        |
+----------------------------------------------------------------------------------------------------------------------------
+| Restaurant meals (lecture)                  | SinghFactory, KingFactory           | Burger + GarlicBread                 |
+----------------------------------------------------------------------------------------------------------------------------
+```
 
 ---
 

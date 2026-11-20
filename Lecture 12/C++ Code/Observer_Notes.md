@@ -183,6 +183,27 @@ channel->uploadVideo("Observer Pattern Tutorial")
 4. Call `notifySubscribers()` whenever the state changes (inside `uploadVideo()`).
 5. In each **concrete observer**, implement `update()`. For the pull model, keep a pointer to the subject to read the new data.
 
+### Where it is used (real world)
+Wherever many objects must react when ONE object changes:
+
+```
+------------------------------------------------------------------------------------------------------
+| Where                          | Subject (observable) | Observers                                  |
+------------------------------------------------------------------------------------------------------
+| YouTube / newsletters          | Channel, newsletter  | Subscribers                                |
+------------------------------------------------------------------------------------------------------
+| UI events (button click)       | Button               | onClick listeners (JS addEventListener)    |
+------------------------------------------------------------------------------------------------------
+| Stock / crypto apps            | Price ticker         | Watchlist, price alerts, charts            |
+------------------------------------------------------------------------------------------------------
+| Food delivery (Swiggy, Zomato) | Order status         | Customer app, restaurant, delivery partner |
+------------------------------------------------------------------------------------------------------
+| MVC / React state              | Model / state        | Views that re-render                       |
+------------------------------------------------------------------------------------------------------
+| Kafka, RabbitMQ (pub-sub)      | Topic                | Consumer services                          |
+------------------------------------------------------------------------------------------------------
+```
+
 ---
 
 ## 2. Links to other principles

@@ -262,6 +262,27 @@ Switch mode mid-trip with `setRoute(new BikeRoute())`. Adding a `TrainRoute` nee
 4. Give the **Context** a `Strategy*` member and **delegate** to it.
 5. **Inject** the strategy via the constructor (and a setter if it must change at runtime).
 
+### Where it is used (real world)
+Anywhere ONE job can be done in several interchangeable ways, picked at runtime:
+
+```
+----------------------------------------------------------------------------------------------------------
+| Where                               | What is swapped (strategy) | Concrete strategies                 |
+----------------------------------------------------------------------------------------------------------
+| Google Maps / navigation            | Route calculation          | Car, bike, walk, public transport   |
+----------------------------------------------------------------------------------------------------------
+| Checkout (Amazon, Flipkart)         | Payment method             | Card, UPI, wallet, cash on delivery |
+----------------------------------------------------------------------------------------------------------
+| C++ STL std::sort(begin, end, comp) | Comparison rule            | Ascending, descending, by any field |
+----------------------------------------------------------------------------------------------------------
+| E-commerce pricing                  | Discount rule              | Festive sale, coupon, no discount   |
+----------------------------------------------------------------------------------------------------------
+| Compression tools                   | Algorithm                  | ZIP, RAR, 7z                        |
+----------------------------------------------------------------------------------------------------------
+| Games                               | Enemy AI behaviour         | Aggressive, defensive, patrol       |
+----------------------------------------------------------------------------------------------------------
+```
+
 ---
 
 ## 4. Links to other principles

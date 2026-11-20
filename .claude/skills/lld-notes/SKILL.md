@@ -21,6 +21,10 @@ For **every topic** (a principle, or each rule inside a principle) write, in thi
    - A simple real-life analogy if it makes the idea clearer (cricket, shop, car...).
 4. **How to spot a violation** (for principles/rules): a bullet list of smells.
 5. **How to apply it** (for principles/rules): numbered steps.
+5b. **Where it is used (real world)** (for every DESIGN PATTERN, as the last subsection of that pattern):
+   one intro line, then a boxed table of 5-6 well-known real uses (apps, libraries, STL, frameworks) whose columns
+   name the pattern's roles (e.g. Where | Subject | Observers). This table is the one allowed exception to
+   "lecture-only examples". Keep it within about 120 columns.
 6. Only then start the **next topic**, with the same steps.
 
 After all topics:
